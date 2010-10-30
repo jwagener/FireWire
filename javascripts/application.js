@@ -95,7 +95,9 @@ $(function(){
       if(soundTrack) {
         soundTrack.pause();
       }
-      soundTrack = new Audio(track.stream_url + "?consumer_key=jwtest");
+      soundTrack = new Audio();
+      soundTrack.src = track.stream_url + "?consumer_key=jwtest";
+      soundTrack.load();
       soundTrack.play();
     }
   });
@@ -104,22 +106,30 @@ $(function(){
     $("#viewer").css({left:parseInt($("#viewer").css("left")) - 320 + 'px'});
 
     // play next track
-    currentImg = currentImg.next();    
+    currentImg = currentImg.next();
     var track = currentImg.data("track");
+
     if(soundTrack) {
-      var fadeDown = setInterval(function() {
-        console.log(soundTrack.volume);
-        if(soundTrack.volume > 0.05) {
-          soundTrack.volume -= 0.05;          
-        } else {
-          clearInterval(fadeDown);
-          soundTrack.pause();
-          soundTrack = new Audio(track.stream_url + "?consumer_key=jwtest");
-          soundTrack.volume = 1;
-          soundTrack.play();          
-        }
-      },100);
+      soundTrack.pause();
+      // var fadeDown = setInterval(function() {
+      //   if(soundTrack.volume > 0.05) {
+      //     soundTrack.volume -= 0.05;
+      //   } else {
+      //     clearInterval(fadeDown);
+      //     soundTrack.pause();
+      //     soundTrack = new Audio();
+      //     soundTrack.src = track.stream_url + "?consumer_key=jwtest";
+      //     soundTrack.load();
+      //     soundTrack.volume = 1;
+      //     soundTrack.play();
+      //   }
+      // },100);
     }
+    soundTrack = new Audio();
+    soundTrack.src = track.stream_url + "?consumer_key=jwtest";
+    soundTrack.load();
+    soundTrack.volume = 1;
+    soundTrack.play();
   });  
 
 });
