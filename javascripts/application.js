@@ -3,6 +3,8 @@
 
 var img_position_left = 0;
 
+var globalOffset = 0;
+
 function buildUrl(options){
   if(!options){
     options = {};
@@ -107,6 +109,12 @@ $(function(){
 
     // play next track
     currentImg = currentImg.next();
+    
+    if(currentImg.next().next().next().length == 0) {
+      globalOffset += 200;
+      loadTracks({offset: globalOffset,callback: loadTracksCallback});      
+    }
+    
     var track = currentImg.data("track");
 
     if(soundTrack) {
