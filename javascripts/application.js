@@ -1,3 +1,8 @@
+
+// 320 x 480
+
+var img_position_left = 0;
+
 function buildUrl(options){
   if(!options){
     options = {};
@@ -39,25 +44,47 @@ function loadTracks(options){
   })
 }
 
-function rotateScaleImg(img){
-  var boundX = 300;
-  var boundY = 400;
+function rotateScalePositionImg(img){
+  $img = $(img);
+  var boundX = 320;
+  var boundY = 480;
   
-  if(img.clientWidth > img.clientHeight){
-    $(img).addClass('rot90');
+  $img.css('left', img_position_left + 'px');
+  img_position_left += $img.width();
+  
+  var orig_width  = $img.width();
+  var orig_height = $img.height();
+  
+  
+  
+//  if($img.width() > $img.height()){ //}.clientWidth > img.clientHeight){
+  if(orig_width > orig_height){
+    $img.addClass('rot90');    
+    $img.css('margin-left',   ((orig_height - orig_width) / 2) + 'px');
+//    $img.css('margin-right',  (-(orig_height - orig_width) / 2) + 'px');
+
+//    $img.css('margin-right',  '-' + (orig_width  - orig_height) + 'px');
+//    $img.css('margin-top',    (orig_width  - orig_height) + 'px');
+//    $img.css('margin-bottom', (orig_width - orig_height ) + 'px');
+
+    // fix the margin
   }
 }
 
-$(function(){
-  loadTracks({
-    callback: function(tracks){
-      $.each(tracks, function(){
-        var img = $('<img src="'+ this.artwork_url +'" />').load(function(){
-          rotateScaleImg(this);
-        });
-        $('.container').append(img);
-        console.log(this.permalink);
-      });
-    }
+
+function loadTracksCallback(tracks){
+  var i =0;
+  $.each(tracks, function(){
+    console.log(tracks);
+    i++;
+    var img = $('<img data-i='+ i +' src="'+ this.artwork_url +'" />').load(function(){
+      rotateScalePositionImg(this);
+      console.log('jo');
+    });
+    var x =$('.container').append(img);
   });
+}
+
+$(function(){
+//  loadTracks({callback: loadTracksCallback});
 });
