@@ -11,11 +11,23 @@ hr {display: none; visibility: hidden;}
 :focus {outline: 0;}
 
 img {
-  border: 0px solid black;
+  border: 0;
   float:left;
 }
 
-.container {
+#container {
+  position: absolute;
+  overflow: hidden;
+  width: 320px;
+  height: 460px;
+}
+
+#viewer {
+  position: absolute;
+  left: 0px;
+  width: 10000px;
+  height: 460px;
+  -webkit-transition: left .3s ease-out;  
 }
 
 .rot90 {

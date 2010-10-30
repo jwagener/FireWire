@@ -81,7 +81,7 @@ function loadTracksCallback(tracks){
       rotateScalePositionImg(this);
       console.log('jo');
     });
-    var x =$('.container').append(img);
+    var x =$('#viewer').append(img);
   });
 }
 
