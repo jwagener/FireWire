@@ -74,8 +74,9 @@ function loadTracksCallback(tracks){
     .wrap("<div>")
     .parents("div").data("track",this);
   });
-  
-  currentImg = $("#viewer div:first");
+  if(!currentImg) {
+    currentImg = $("#viewer div:first");    
+  }
   
 }
 
