@@ -12,7 +12,7 @@ function buildUrl(options){
   var consumer_key = 'jwtest';
   
   var base = 'http://api.soundcloud.com/tracks.js';
-  var params = 'consumer_key=' + consumer_key + '&created_with_app_id=64&offset=' + offset + '&limit=' + limit;
+  var params = 'consumer_key=' + consumer_key + '&filter=streamable&created_with_app_id=64&offset=' + offset + '&limit=' + limit;
   
   var url = base + '?' + params;
   return(url);
@@ -46,45 +46,80 @@ function loadTracks(options){
 
 function rotateScalePositionImg(img){
   $img = $(img);
-  var boundX = 320;
-  var boundY = 480;
   
-  $img.css('left', img_position_left + 'px');
-  img_position_left += $img.width();
+  $img.width($img.width()*1.08);
   
   var orig_width  = $img.width();
   var orig_height = $img.height();
   
-  
-  
-//  if($img.width() > $img.height()){ //}.clientWidth > img.clientHeight){
   if(orig_width > orig_height){
-    $img.addClass('rot90');    
-    $img.css('margin-left',   ((orig_height - orig_width) / 2) + 'px');
-//    $img.css('margin-right',  (-(orig_height - orig_width) / 2) + 'px');
-
-//    $img.css('margin-right',  '-' + (orig_width  - orig_height) + 'px');
-//    $img.css('margin-top',    (orig_width  - orig_height) + 'px');
-//    $img.css('margin-bottom', (orig_width - orig_height ) + 'px');
-
-    // fix the margin
+    $img.addClass('rot90');
+    var marg = (orig_width - orig_height) / 2;
+    $img.css('margin', marg + 'px ' + -marg + 'px');
   }
 }
 
+var currentImg;
+var soundTrack;
 
 function loadTracksCallback(tracks){
-  var i =0;
   $.each(tracks, function(){
-    console.log(tracks);
-    i++;
-    var img = $('<img data-i='+ i +' src="'+ this.artwork_url +'" />').load(function(){
-      rotateScalePositionImg(this);
-      console.log('jo');
-    });
-    var x =$('#viewer').append(img);
+    $('<img src="'+ this.artwork_url +'" />')
+      .load(function(){
+        rotateScalePositionImg(this);
+      })
+    .appendTo("#viewer")
+    .wrap("<div>")
+    .parents("div").data("track",this);
   });
+  
+  currentImg = $("#viewer div:first");
+  
 }
 
 $(function(){
-//  loadTracks({callback: loadTracksCallback});
+  loadTracks({callback: loadTracksCallback});
+
+  // prevent safari from scrolling
+  $("body").bind("touchmove",function(ev) {
+    ev.preventDefault();
+  });
+  
+  $("#container").bind("swiperight",function() {
+    if(parseInt($("#viewer").css("left")) != 0) {
+      $("#viewer").css({left:parseInt($("#viewer").css("left")) + 320 + 'px'});
+
+      // play next track
+      currentImg = currentImg.prev();    
+      var track = currentImg.data("track");
+      if(soundTrack) {
+        soundTrack.pause();
+      }
+      soundTrack = new Audio(track.stream_url + "?consumer_key=jwtest");
+      soundTrack.play();
+    }
+  });
+
+  $("#container").bind("swipeleft",function() {
+    $("#viewer").css({left:parseInt($("#viewer").css("left")) - 320 + 'px'});
+
+    // play next track
+    currentImg = currentImg.next();    
+    var track = currentImg.data("track");
+    if(soundTrack) {
+      var fadeDown = setInterval(function() {
+        console.log(soundTrack.volume);
+        if(soundTrack.volume > 0.05) {
+          soundTrack.volume -= 0.05;          
+        } else {
+          clearInterval(fadeDown);
+          soundTrack.pause();
+          soundTrack = new Audio(track.stream_url + "?consumer_key=jwtest");
+          soundTrack.volume = 1;
+          soundTrack.play();          
+        }
+      },100);
+    }
+  });  
+
 });

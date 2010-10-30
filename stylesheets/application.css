@@ -10,9 +10,42 @@ hr {display: none; visibility: hidden;}
 
 :focus {outline: 0;}
 
+/* prevent jquery UI */
+.ui-loader {
+  display: none;
+}
+
+body {
+  background: black;
+  overflow: hidden;
+  font-family: Helvetica,Arial;
+  -moz-user-select: none;
+  -khtml-user-select : none;
+}
+
+h1 {
+  font-size: 30px;
+  text-align: center;
+  margin-top: 100px;
+}
+
+h2 {
+  font-size: 100px;
+  text-align: center;
+  margin-top: 0px;
+  margin: 0;
+}
+
+#viewer div p {
+  padding: 40px 40px 0 40px;
+  text-align: center;
+}
+
 img {
   border: 0;
-  float:left;
+/*  float:left;*/
+ -webkit-user-drag: none;
+ -webkit-transform: rotateY(0deg); /* trigger opengl rendering on iphone */
 }
 
 #container {
@@ -27,7 +60,15 @@ img {
   left: 0px;
   width: 10000px;
   height: 460px;
-  -webkit-transition: left .3s ease-out;  
+  -webkit-transition: left .2s ease-out;
+}
+
+#viewer div {
+  width: 320px;
+  height: 460px;
+  overflow: hidden;
+  float: left;
+  color: white;
 }
 
 .rot90 {
