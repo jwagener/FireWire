@@ -11,11 +11,11 @@ hr {display: none; visibility: hidden;}
 :focus {outline: 0;}
 
 img {
-  border: 1px solid black;
+  border: 0px solid black;
+  float:left;
 }
 
 .container {
-  width: 300px;
 }
 
 .rot90 {
