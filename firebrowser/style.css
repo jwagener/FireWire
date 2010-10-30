@@ -1,0 +1,50 @@
+#image-viewer-container {
+  position: absolute;
+  overflow: hidden;
+  width: 320px;
+  height: 460px;
+}
+
+#image-viewer {
+  position: absolute;
+  left: 0px;
+  width: 960px;
+  height: 460px;
+  -webkit-transition: left .3s ease-out;  
+}
+
+#image-1 {
+  position: absolute;
+  left: 0;
+  width: 320px;
+  height: 460px;
+  -webkit-background-size: 320px 460px;
+  background: url(images/image1.jpg);
+}
+
+#image-2 {
+  position: absolute;
+  left: 320px;
+  width: 320px;
+  height: 460px;
+  -webkit-background-size: 320px 460px;
+  background: url(images/image2.jpg);
+}
+
+#image-3 {
+  position: absolute;
+  left: 640px;
+  width: 320px;
+  height: 460px;
+  -webkit-background-size: 320px 460px;
+  background: url(images/image3.jpg);  
+}
+
+#image-4 {
+  position: absolute;
+  left: 960px;
+  width: 320px;
+  height: 460px;
+  -webkit-background-size: 320px 460px;
+  background: url(images/image1.jpg);
+}
