@@ -1,9 +1,6 @@
-
-// 320 x 480
-
-var img_position_left = 0;
-
 var globalOffset = 0;
+var currentImg;
+var soundTrack;
 
 function buildUrl(options){
   if(!options){
@@ -33,7 +30,6 @@ function filterArtwork(tracks){
   return filtered;
 }
 
-
 function loadTracks(options){
   var url = buildUrl(options);
   $.ajax({
@@ -60,9 +56,6 @@ function rotateScalePositionImg(img){
     $img.css('margin', marg + 'px ' + -marg + 'px');
   }
 }
-
-var currentImg;
-var soundTrack;
 
 function loadTracksCallback(tracks){
   $.each(tracks, function(){
@@ -95,19 +88,21 @@ $(function(){
       $("#viewer").css({left:parseInt($("#viewer").css("left")) + 320 + 'px'});
 
       // play next track
-      currentImg = currentImg.prev();    
-      var track = currentImg.data("track");
+      currentImg = currentImg.prev();
+
       if(soundTrack) {
         soundTrack.pause();
       }
-      soundTrack = new Audio();
-      soundTrack.src = track.stream_url + "?consumer_key=jwtest";
+      soundTrack = new Audio(currentImg.data("track").stream_url + "?consumer_key=jwtest");
       soundTrack.load();
       soundTrack.play();
-    }
-  });
+      $(soundTrack).bind('ended',function() {
+        $("#container").trigger('swipeleft');
+      });
 
-  $("#container").bind("swipeleft",function() {
+    }
+  })
+  .bind("swipeleft",function() {
     $("#viewer").css({left:parseInt($("#viewer").css("left")) - 320 + 'px'});
 
     var oldCurrentImg = currentImg;
@@ -121,57 +116,19 @@ $(function(){
       loadTracks({offset: globalOffset,callback: loadTracksCallback});      
     }
     
-    var track = currentImg.data("track");
-
     // set title
-    currentImg.find("p").html(track.title);
-    
-    // fade out old sound
-    if(oldCurrentImg.data("soundTrack") != undefined) {
-      var oldAudio = oldCurrentImg.data("soundTrack");
-      var fadeOut = setInterval(function() {
-        if(oldAudio.volume > 0.01) {
-          oldAudio.volume -= 0.01;
-        } else {
-          clearInterval(fadeOut);
-          oldAudio.pause();
-          currentImg.data("soundTrack",new Audio());
-          var curAudio = currentImg.data("soundTrack");
-          curAudio.src = track.stream_url + "?consumer_key=jwtest";
-          curAudio.load();
-          curAudio.volume = 1;
-          curAudio.play();      
+    currentImg.find("p").html(currentImg.data("track").title);
 
-          // fade in audio
-          var fadeIn = setInterval(function() {
-            if(curAudio.volume < 0.99) {
-              curAudio.volume += 0.01;
-            } else {
-              clearInterval(fadeIn);
-            }
-          },40);
-
-        }
-      },40);
-    } else {
-      // no audio has played yet, set up new sound
-      currentImg.data("soundTrack",new Audio());
-      var curAudio = currentImg.data("soundTrack");
-      curAudio.src = track.stream_url + "?consumer_key=jwtest";
-      curAudio.load();
-      curAudio.volume = 0;
-      curAudio.play();
-
-      // fade in audio
-      var fadeIn = setInterval(function() {
-        if(curAudio.volume < 0.99) {
-          curAudio.volume += 0.01;
-        } else {
-          clearInterval(fadeIn);
-        }
-      },40);
-      
+    if(soundTrack) {
+      soundTrack.pause();
     }
+    soundTrack = new Audio(currentImg.data("track").stream_url + "?consumer_key=jwtest");
+    soundTrack.load();
+    soundTrack.play();
+    $(soundTrack).bind('ended',function() {
+      $("#container").trigger('swipeleft');
+    });
+      
   });  
 
 });
