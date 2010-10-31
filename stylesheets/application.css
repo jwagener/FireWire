@@ -59,8 +59,8 @@ img {
 #viewer {
   position: absolute;
   left: 0px;
-  width: 30000px;
-  height: 460px;
+  width: 20000px;
+  height: 1px;
   -webkit-transition: left .2s ease-out;
 }
 
