@@ -72,7 +72,9 @@ function loadTracksCallback(tracks){
       })
     .appendTo("#viewer")
     .wrap("<div>")
-    .parents("div").data("track",this);
+    .parent("div")
+      .data("track",this)
+      .append("<p class='info'>hej</p>");
   });
   if(!currentImg) {
     currentImg = $("#viewer div:first");    
@@ -108,9 +110,12 @@ $(function(){
   $("#container").bind("swipeleft",function() {
     $("#viewer").css({left:parseInt($("#viewer").css("left")) - 320 + 'px'});
 
+    var oldCurrentImg = currentImg;
+
     // play next track
     currentImg = currentImg.next();
     
+    // preload tracks
     if(currentImg.next().next().next().length == 0) {
       globalOffset += 200;
       loadTracks({offset: globalOffset,callback: loadTracksCallback});      
@@ -118,27 +123,55 @@ $(function(){
     
     var track = currentImg.data("track");
 
-    if(soundTrack) {
-      soundTrack.pause();
-      // var fadeDown = setInterval(function() {
-      //   if(soundTrack.volume > 0.05) {
-      //     soundTrack.volume -= 0.05;
-      //   } else {
-      //     clearInterval(fadeDown);
-      //     soundTrack.pause();
-      //     soundTrack = new Audio();
-      //     soundTrack.src = track.stream_url + "?consumer_key=jwtest";
-      //     soundTrack.load();
-      //     soundTrack.volume = 1;
-      //     soundTrack.play();
-      //   }
-      // },100);
+    // set title
+    currentImg.find("p").html(track.title);
+    
+    // fade out old sound
+    if(oldCurrentImg.data("soundTrack") != undefined) {
+      var oldAudio = oldCurrentImg.data("soundTrack");
+      var fadeOut = setInterval(function() {
+        if(oldAudio.volume > 0.01) {
+          oldAudio.volume -= 0.01;
+        } else {
+          clearInterval(fadeOut);
+          oldAudio.pause();
+          currentImg.data("soundTrack",new Audio());
+          var curAudio = currentImg.data("soundTrack");
+          curAudio.src = track.stream_url + "?consumer_key=jwtest";
+          curAudio.load();
+          curAudio.volume = 1;
+          curAudio.play();      
+
+          // fade in audio
+          var fadeIn = setInterval(function() {
+            if(curAudio.volume < 0.99) {
+              curAudio.volume += 0.01;
+            } else {
+              clearInterval(fadeIn);
+            }
+          },40);
+
+        }
+      },40);
+    } else {
+      // no audio has played yet, set up new sound
+      currentImg.data("soundTrack",new Audio());
+      var curAudio = currentImg.data("soundTrack");
+      curAudio.src = track.stream_url + "?consumer_key=jwtest";
+      curAudio.load();
+      curAudio.volume = 0;
+      curAudio.play();
+
+      // fade in audio
+      var fadeIn = setInterval(function() {
+        if(curAudio.volume < 0.99) {
+          curAudio.volume += 0.01;
+        } else {
+          clearInterval(fadeIn);
+        }
+      },40);
+      
     }
-    soundTrack = new Audio();
-    soundTrack.src = track.stream_url + "?consumer_key=jwtest";
-    soundTrack.load();
-    soundTrack.volume = 1;
-    soundTrack.play();
   });  
 
 });

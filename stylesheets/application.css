@@ -21,6 +21,7 @@ body {
   font-family: Helvetica,Arial;
   -moz-user-select: none;
   -khtml-user-select : none;
+  color: white;
 }
 
 h1 {
@@ -58,7 +59,7 @@ img {
 #viewer {
   position: absolute;
   left: 0px;
-  width: 10000px;
+  width: 30000px;
   height: 460px;
   -webkit-transition: left .2s ease-out;
 }
@@ -69,6 +70,11 @@ img {
   overflow: hidden;
   float: left;
   color: white;
+}
+
+#viewer div p.info {
+  color:white;
+  padding: 0;
 }
 
 .rot90 {
