@@ -83,39 +83,18 @@ $(function(){
     ev.preventDefault();
   });
   
-  $("#container").bind("swiperight",function() {
-    if(parseInt($("#viewer").css("left")) != 0) {
-      $("#viewer").css({left:parseInt($("#viewer").css("left")) + 320 + 'px'});
-
-      // play next track
-      currentImg = currentImg.prev();
-
-      if(soundTrack) {
-        soundTrack.pause();
-      }
-      soundTrack = new Audio(currentImg.data("track").stream_url + "?consumer_key=jwtest");
-      soundTrack.load();
-      soundTrack.play();
-      $(soundTrack).bind('ended',function() {
-        $("#container").trigger('swipeleft');
-      });
-
-    }
-  })
-  .bind("swipeleft",function() {
-    $("#viewer").css({left:parseInt($("#viewer").css("left")) - 320 + 'px'});
-
-    var oldCurrentImg = currentImg;
+  function swipe(direction){
+    $("#viewer").css({left:parseInt($("#viewer").css("left")) + ((0-direction) * 320) + 'px'});
 
     // play next track
-    currentImg = currentImg.next();
-    
+    currentImg = (direction > 0) ? currentImg.next() : currentImg.prev();
+
     // preload tracks
     if(currentImg.next().next().next().length == 0) {
       globalOffset += 200;
       loadTracks({offset: globalOffset,callback: loadTracksCallback});      
     }
-    
+
     // set title
     currentImg.find("p").html(currentImg.data("track").title);
 
@@ -128,7 +107,16 @@ $(function(){
     $(soundTrack).bind('ended',function() {
       $("#container").trigger('swipeleft');
     });
-      
+    
+  }
+  
+  $("#container").bind("swiperight",function() {
+    if(parseInt($("#viewer").css("left")) != 0) {
+      swipe(-1);
+    }
+  })
+  .bind("swipeleft",function() {
+    swipe(1);
   });  
 
 });
