@@ -43,6 +43,9 @@ h2 {
 }
 
 img {
+  display: block;
+  width: 100%;
+  
   border: 0;
 /*  float:left;*/
  -webkit-user-drag: none;

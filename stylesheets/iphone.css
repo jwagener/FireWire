@@ -44,6 +44,8 @@ h2 {
 
 img {
   border: 0;
+  display: block;
+  width: 100%;
 /*  float:left;*/
  -webkit-user-drag: none;
  -webkit-transform: rotateY(0deg); /* trigger opengl rendering on iphone */
