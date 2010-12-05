@@ -8,7 +8,13 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
     <link rel="apple-touch-icon" href="images/logo.png"/>
     <link rel="apple-touch-startup-image" href="images/startup.png" />
-    <link rel="stylesheet" href="stylesheets/application.css" />
+    <script type="text/javascript">
+    if (screen.width <= 480) {
+      document.write('<link href="iphone.css" rel="stylesheet" type="text/css">');
+    } else {
+      document.write('<link rel="stylesheet" href="stylesheets/application.css">');
+    }
+    </script>
     <script src="javascripts/jquery-1.4.3.min.js"></script>
     <script src="javascripts/jquery.mobile-1.0a1.min.js"></script>
     <script src="javascripts/application.js"></script>
