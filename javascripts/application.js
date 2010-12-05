@@ -1,3 +1,8 @@
+var SETTINGS = {
+  consumer_key: 'ZLxQXrXLDEAgivKIyKUVQ',
+  client_app_id: 124
+}
+
 var globalOffset = 0;
 var currentImg;
 var soundTrack;
@@ -7,11 +12,10 @@ function buildUrl(options){
     options = {};
   }
   var offset = options['offset'] ? options['offset'] : 0;
-  var limit  = options['limit']  ? options['limit']  : 200;
-  var consumer_key = 'jwtest';
+  var limit  = options['limit']  ? options['limit']  : 50;
   
   var base = 'http://api.soundcloud.com/tracks.js';
-  var params = 'consumer_key=' + consumer_key + '&filter=streamable&created_with_app_id=64&offset=' + offset + '&limit=' + limit;
+  var params = 'consumer_key=' + SETTINGS.consumer_key + '&filter=streamable&created_with_app_id=' + SETTINGS.client_app_id + '&offset=' + offset + '&limit=' + limit;
   
   var url = base + '?' + params;
   return(url);
@@ -61,7 +65,7 @@ function loadTracksCallback(tracks){
   $.each(tracks, function(){
     $('<img src="'+ this.artwork_url +'" />')
       .load(function(){
-        rotateScalePositionImg(this);
+        //rotateScalePositionImg(this);
       })
     .appendTo("#viewer")
     .wrap("<div>")
@@ -86,7 +90,7 @@ $(function(){
   function swipe(direction){
     $("#viewer").css({left:parseInt($("#viewer").css("left")) + ((0-direction) * 320) + 'px'});
 
-    // play next track
+    // play next track––
     currentImg = (direction > 0) ? currentImg.next() : currentImg.prev();
 
     // preload tracks
@@ -101,7 +105,7 @@ $(function(){
     if(soundTrack) {
       soundTrack.pause();
     }
-    soundTrack = new Audio(currentImg.data("track").stream_url + "?consumer_key=jwtest");
+    soundTrack = new Audio(currentImg.data("track").stream_url + "?consumer_key=" + SETTINGS.consumer_key);
     soundTrack.load();
     soundTrack.play();
     $(soundTrack).bind('ended',function() {
