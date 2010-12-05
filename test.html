@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  	<title>Soundiverse</title>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/> 
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" /> 
+    <link rel="apple-touch-icon" href="images/logo.png"/>
+    <link rel="apple-touch-startup-image" href="images/startup.png" />
+    <script src="javascripts/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+
+        $(document).bind("onScrollStart",function(ev,dir) {
+          console.log('SCROLL',dir)
+          var oldScrollPos = $("#maincontainer").scrollLeft();
+          if(dir == -1) {
+            $("#maincontainer").animate({scrollLeft:oldScrollPos-301},100);
+          } else {
+            $("#maincontainer").animate({scrollLeft:oldScrollPos+301},100);            
+          }
+
+        });
+        
+        var scrollDetector;
+//        var oldScrollPos;
+        $("#proxyscroll").scroll(function(ev) {
+
+          var oldScrollPos = $("#proxyscroll").scrollLeft();
+          var direction = 0;
+          var hasTriggered = false;
+          if(!scrollDetector) {
+            scrollDetector = setInterval(function() {
+              var newScroll = $("#proxyscroll").scrollLeft();
+              if(oldScrollPos == newScroll) {
+                $(document).trigger("onScrollStop",direction);
+                clearInterval(scrollDetector);
+                scrollDetector = null;
+              } else if (oldScrollPos < newScroll) {
+                direction = 1;
+                oldScrollPos = newScroll;
+              } else {
+                direction = -1;
+                oldScrollPos = newScroll;
+              }
+              if(direction != 0 && !hasTriggered) {
+                hasTriggered = true;
+                $(document).trigger("onScrollStart",direction);
+              }
+            },100);
+          }
+
+
+//          var sLeft = $("#maincontainer").scrollLeft();
+//          $("#maincontainer").animate({scrollLeft:sLeft+200});
+          // ev.preventDefault();
+          // return false;
+        });
+        
+        $("#foo").click(function() {
+          $("#maincontainer").animate({scrollLeft:200});
+        });
+        
+      });
+    </script>
+    <style type="text/css">
+    
+    body {
+      background: black;
+    }
+    
+    /* circumvent weird scrolling chrome */
+    ::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
+    }
+    
+      #maincontainer {
+        width: 300px;
+        height: 300px;
+        background: black;
+        overflow: scroll;
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        margin-left: -150px;
+        z-index: 99;
+      }
+      
+      #proxyscroll {
+        width: 300px;
+        height: 300px;
+        background: rgba(0,0,0,0.1);
+        overflow: scroll;
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        margin-left: -150px;
+        z-index: 1000;
+      }
+      
+      #longthing {
+        width: 90000px;
+        height: 10px;
+      }
+      
+      #innercont {
+        width: 4000px;
+      }
+      
+      .bild {
+        width: 300px;
+        height: 300px;
+        background: red;
+        margin: 0 1px 0 0;
+        float: left;
+      }
+      
+      .bild.first {
+        background: yellow;
+      }
+      
+      .bild.last {
+        background: green;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div id="proxyscroll">
+      <div id="longthing"></div>
+    </div>
+    <div id="maincontainer">
+      <div id="innercont">
+        <div class="bild first"></div>
+        <div class="bild"></div>
+        <div class="bild first"></div>
+        <div class="bild"></div>
+        <div class="bild first"></div>
+        <div class="bild"></div>
+        <div class="bild first"></div>
+        <div class="bild"></div>
+        <div class="bild first"></div>
+        <div class="bild"></div>
+        <div class="bild first"></div>
+        <div class="bild"></div>
+        <div class="bild first"></div>
+        <div class="bild last"></div>
+      </div>
+    </div>
+  </body>
+</html>
