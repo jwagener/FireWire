@@ -1,0 +1,23 @@
+CACHE MANIFEST
+# This is a comment.
+# Cache manifest version 0.0.1
+# If you change the version number in this comment,
+# the cache manifest is no longer byte-for-byte
+# identical.
+
+images/logo.png
+images/startup.png
+javascripts/applcation.js
+javascripts/jquery-1.4.3.min.js
+javascripts/jquery-mobile-1.0a1.js
+javascripts/jquery.mobile-1.0a1.min.js
+stylesheets/application.css
+stylesheets/iphone.css
+ 
+NETWORK:
+# All URLs that start with the following lines
+# are whitelisted.
+http://api.soundcloud.com/
+http://a1.soundcloud.com/
+http://i1.soundcloud.com/
+
